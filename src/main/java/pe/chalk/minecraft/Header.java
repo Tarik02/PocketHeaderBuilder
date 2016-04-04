@@ -45,14 +45,11 @@ public class Header {
             try(final BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)){
                 writer.write("#pragma once"); writer.newLine();
                 writer.newLine();
-                writer.write("class " + this.getClassName()); writer.newLine();
-                writer.write("{"); writer.newLine();
-                writer.write("public: "); writer.newLine();
+                writer.write("class " + this.getClassName() + " {"); writer.newLine();
+                writer.write("public:"); writer.newLine();
 
                 final String demangled = OnlineDemangler.demangle(this.getFunctions().parallelStream().collect(Collectors.joining("\n")));
                 if(demangled != null) Arrays.stream(demangled.split("\\n")).parallel().distinct().map(function -> {
-                    function = function.replaceAll("&", " &");
-                    function = function.replaceAll("\\*", " *");
 
                     int open = function.indexOf('(');
                     if(open >= 0){
@@ -74,7 +71,7 @@ public class Header {
                     if(function.equals("__imp___cxa_pure_virtual")) prefix += "//";
 
                     prefix += "virtual ";
-                    if(!function.startsWith("~")) prefix += "void ";
+                    if(!function.startsWith("~")) prefix += "void* ";
 
                     try{
                         writer.write(prefix + function + ";"); writer.newLine();
@@ -82,13 +79,6 @@ public class Header {
                         throw new RuntimeException(e);
                     }
                 });
-
-                writer.write("};"); writer.newLine(); writer.newLine();
-                writer.write("/* Created by PocketHeaderBuilder"); writer.newLine();
-                writer.write(" * "); writer.newLine();
-                writer.write(" * Licensed under the Apache License, Version 2.0"); writer.newLine();
-                writer.write(" * https://github.com/ChalkPE/PocketHeaderBuilder"); writer.newLine();
-                writer.write(" */"); writer.newLine();
             }
         }catch(Exception e){
             e.printStackTrace();
