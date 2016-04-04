@@ -45,8 +45,8 @@ public class Header {
             try(final BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)){
                 writer.write("#pragma once"); writer.newLine();
                 writer.newLine();
-                writer.write("class " + this.getClassName() + " {"); writer.newLine();
-                writer.write("public:"); writer.newLine();
+                writer.write("struct " + this.getClassName() + " {"); writer.newLine();
+                writer.write("    void** vtable;"); writer.newLine();
 
                 final String demangled = OnlineDemangler.demangle(this.getFunctions().parallelStream().collect(Collectors.joining("\n")));
                 if(demangled != null) Arrays.stream(demangled.split("\\n")).parallel().distinct().map(function -> {
