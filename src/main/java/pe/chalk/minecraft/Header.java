@@ -67,7 +67,7 @@ public class Header {
 
                     return function;
                 }).filter(Objects::nonNull).forEachOrdered(function -> {
-                    String prefix = "    ";
+                    String prefix = "	"";
                     if(function.equals("__imp___cxa_pure_virtual")) prefix += "//";
 
                     prefix += "virtual ";
